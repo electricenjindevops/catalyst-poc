@@ -21,6 +21,7 @@
     "@vercel/speed-insights": "^1.0.10",
     "clsx": "^2.1.0",
     "gql.tada": "^1.4.3",
+    "@vercel/edge-config": "^0.4.1",
     "graphql": "^16.8.1",
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.365.0",
