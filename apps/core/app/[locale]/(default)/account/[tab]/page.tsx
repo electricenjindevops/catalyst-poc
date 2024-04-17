@@ -6,7 +6,10 @@ import { getCustomerAddresses } from '~/client/queries/get-customer-addresses';
 import { LocaleType } from '~/i18n';
 
 import { AddressesContent } from './_components/addresses-content';
+import { SettingsContent } from './_components/settings-content';
+import { TabHeading } from './_components/tab-heading';
 import { TabType } from './layout';
+import { getCustomerSettingsQuery } from './page-data';
 
 interface Props {
   params: {
@@ -37,10 +40,10 @@ const tabHeading = async (heading: string, locale: string) => {
 export default async function AccountTabPage({ params: { tab, locale }, searchParams }: Props) {
   switch (tab) {
     case 'orders':
-      return tabHeading(tab, locale);
+      return <TabHeading heading={tab} locale={locale} />;
 
     case 'messages':
-      return tabHeading(tab, locale);
+      return <TabHeading heading={tab} locale={locale} />;
 
     case 'addresses': {
       const { before, after } = searchParams;
@@ -56,17 +59,26 @@ export default async function AccountTabPage({ params: { tab, locale }, searchPa
 
       const { addresses, pageInfo } = customerAddressesDetails;
 
-      return <AddressesContent addresses={addresses} pageInfo={pageInfo} title={tab} />;
+      return <AddressesContent addresses={addresses} pageInfo={pageInfo} />;
     }
 
     case 'wishlists':
-      return tabHeading(tab, locale);
+      return <TabHeading heading={tab} locale={locale} />;
 
     case 'recently-viewed':
-      return tabHeading('recentlyViewed', locale);
+      return <TabHeading heading={tab} locale={locale} />;
 
-    case 'settings':
-      return tabHeading(tab, locale);
+    case 'settings': {
+      const customerSettings = await getCustomerSettingsQuery({
+        address: { filters: { entityIds: [4, 5, 6, 7] } },
+      });
+
+      if (!customerSettings) {
+        notFound();
+      }
+
+      return <SettingsContent customerSettings={customerSettings} />;
+    }
 
     default:
       return notFound();
